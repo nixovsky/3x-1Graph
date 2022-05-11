@@ -1,41 +1,54 @@
 var cvs = document.getElementById('graph');
 var ctx = cvs.getContext('2d');
 
-ctx.font = "11px Arial";
+let startData = prompt('Введите начальное число'); // Начальное число от когорого ведется отсчет
+let startDataNaN = startData; // Начально число которое не будет меняться
 
-let contY = 600;
+// Создание масива данных для графа
 let i = 0;
-let contX = 0;
-let cont = 6; // Указываем начальное число
+let arr = [startData]; // Добавляем в виде первого значения градины введенное число
 
-function graph() {
-	cont = cont * 15;
-	ctx.moveTo (cont, cont); // начало графа
-
-	if (cont % 2 == 0){
-		cont /= 2;
+while (startData > 1){ // Вычисляем оставшиеся градины до начала следующего цикла петли
+	if (startData % 2 == 0) {
+		i = startData / 2;
 	} else {
-		cont = (cont * 3) / 2;
+		i = startData * 3 + 1;
 	}
 
-	ctx.lineTo (cont, cont); // То куда линия будет нарисована
-	ctx.stroke();
+	arr.push(i);
+	startData = i;
 }
 
-while (contY > 0 && contX < 600){
-	if (i < 41){
-		ctx.fillText (`${i}`, 1, contY - 10);
-		ctx.fillText (`${i}`, contX + 13, 600);
-		i++;
-		ctx.moveTo (14, contY);
-		ctx.lineTo (600, contY);
-		ctx.moveTo (contX, 590);
-		ctx.lineTo (contX, 0);
-		ctx.strokeStyle = "grey";
-		ctx.stroke();
-	}
-	contY -= 15;
-	contX += 15;
+let count = arr.length; // Кол-во градин в результате вычисления
+let valuesX = []; // Значения по оси x
+
+// Находим сколько градин будет и выписываем их в ось x
+for (let k = 0; k < count; k++){
+	valuesX.push(k);
 }
 
-graph();
+alert(`Начальное число отсчета: ${startDataNaN}\n` + `Всего значений в массиве: ${count}\n` + `Сам массив: ${arr}\n` + valuesX);
+
+
+let chart = new Chart(ctx, {
+// Тип графика
+type: 'line',
+ 
+// Создание графиков
+data: {
+    // Точки графиков
+    labels: arr,
+    xLabels: valuesX,
+    // График
+    datasets: [{
+        label: 'Значение градины', // Название
+        borderColor: 'rgb(40, 160, 220)', // Цвет линии
+        backgroundColor: 'rgb(255, 255, 255, 0)', // Фон ниже линии
+        data: arr, // Данные каждой точки графика
+        tension: 0,
+    }]
+},
+ 
+// Настройки графиков
+options: {}
+});
